@@ -1,0 +1,147 @@
+
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-01-01 13:00:00`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date" )
+
+"Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec"
+scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload" )
+
+# input UsersInput{}
+type Query {
+    user:User @middleware (checks:["auth:api"]) @auth
+    users(count:Int,page:Int,token:String,id:Int): Paginator @field(resolver: "App\\GraphQL\\Queries\\Users@resolve")
+    blogposts: [BlogPost] @all
+    blogpost (id: Int! @eq): BlogPost @find @middleware(checks:["auth:api"])
+    categories: [Category] @all
+    category (id: Int! @eq):Category @find
+}
+
+type BlogPost {
+    id: ID!
+    title: String!
+    content: String!
+    cover_picture: String
+    title:String
+    category:Category @belongsTo
+    summary:String
+    content:String
+    created_at: DateTime!
+    updated_at: DateTime!
+    user: User! @belongsTo
+    comments: [Comment] @hasMany
+}
+
+type Comment{
+    id: ID!
+    response: String!
+    blogpost: BlogPost! @belongsTo
+    user:User @belongsTo
+    created_at:DateTime
+}
+type Category{
+  id:ID!
+  name:String
+  cover_picture:String
+  description:String
+  blogposts:[BlogPost] @hasMany
+}
+
+type Paginator {
+    pagination:Pagination
+}
+
+
+type Pagination{
+data:[User!]!
+current_page:Int
+first_page_url:String
+from:Int
+last_page:Int
+last_page_url:String
+next_page_url:String
+per_page:Int
+prev_page_url:String
+total:Int
+
+}
+
+type Mutation {
+  uploadFile(
+    file:Upload
+    filename:String
+    filesize:Int
+    filetype:String
+    ):String
+
+    ### User Mutation
+    createUser(
+        name: String @rules(apply: ["required"])
+        email: String @rules(apply: ["required", "email", "unique:users,email"])
+        avatar:String
+        password: String! @rules(apply: ["min:8"]) @bcrypt
+    ): User! @create(model: "App\\User")
+    updateUser(
+        id: ID! @rules(apply: ["required"])
+        name: String
+        email: String @rules(apply: ["email"])
+        avatar:String
+        password: String @middleware(checks:["auth:api"]) @rules(apply: ["min:8"]) @bcrypt
+    ):User @update(model: "App\\User")
+    deleteUser(
+        id: ID! @rules(apply: ["required"])
+      ):User! @middleware(checks:["auth:api"]) @delete(model: "App\\User")
+  ### End of user Mutation
+
+
+  ### BlogPost Mutation
+     createBlogPost(
+       cover_picture:String
+       category_id:Int!
+       user_id:Int!
+       title:String
+       summary:String
+       content:String!
+       ): BlogPost! @middleware(checks:["auth:api"]) @create(model:"App\\BlogPost")
+
+     updateBlogPost(
+       id:ID! @rules(apply: ["required"])
+       cover_picture:String
+       category_id:Int
+       user_id:Int
+       title:String
+       summary:String
+       content:String
+       ):  BlogPost! @middleware(checks:["auth:api"]) @update(model:"App\\BlogPost")
+
+     deleteBlogPost(
+       id: ID! @rules(apply: ["required"])
+       ):  BlogPost! @middleware(checks:["auth:api"]) @delete(model:"App\\BlogPost")
+   ###End of blogpost Mutation
+
+   ###Comments Mutation
+   createComment(
+     blogpost_id:Int!
+     user_id:Int!
+     response:String
+     ): Comment @middleware(checks:["auth:api"]) @create(model:"App\\Comment")
+
+    deleteComment(
+      id: ID! @rules(apply: ["required"])
+      ):  Comment! @middleware(checks:["auth:api"]) @delete(model:"App\\Comment")
+
+   ###End of Comments Mutation
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    avatar:String
+    password:String
+    isAdmin:Boolean
+    blogposts:[BlogPost] @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
