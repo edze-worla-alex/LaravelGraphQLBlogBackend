@@ -1,6 +1,6 @@
 const mix = require('laravel-mix');
 
-const PUBLIC_PATH = "http://fresients.com//";
+const PUBLIC_PATH = "http://127.0.0.1:8000//";
 var Vue = require("vue");
 
 require('laravel-mix-polyfill');
@@ -64,8 +64,8 @@ mix.webpackConfig({
  */
 
 mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css').polyfill({
       enabled: true,
+      .sass('resources/sass/app.scss', 'public/css').polyfill({
       useBuiltIns: "usage",
       targets: {"firefox": "40", "ie":11}
    });;
