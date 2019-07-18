@@ -1,3 +1,37 @@
+# Software's used for backend
+# 1.Laravel <br>
+Laravel is php based framework for web application development
+https://laravel.com/
+
+# 2.Lighthouse <br>
+GraphQL Server for Laravel
+Lighthouse is a PHP package that allows you to serve a GraphQL endpoint from your Laravel application. It greatly reduces the boilerplate required to create a schema, integrates well with any Laravel project, and is highly customizable giving you full control over your data.
+https://lighthouse-php.com/
+
+# 3.Faker <br>
+Faker is a PHP library that generates fake data for you. Whether you need to bootstrap your database, create good-looking XML documents, fill-in your persistence to stress test it, or anonymize data taken from a production service, Faker is for you.
+Faker is heavily inspired by Perl's Data::Faker, and by ruby's Faker.
+Faker requires PHP >= 5.3.3.
+https://github.com/fzaninotto/Faker
+
+# 4.Laravel 5 log viewer <br>
+Log Viewer for Laravel 5 (compatible with 4.2 too) and Lumen. Install with composer, create a route to LogViewerController. No public assets, no vendor routes, works with and/or without log rotate. Inspired by Micheal Mand's Laravel 4 log viewer (works only with laravel 4.1)
+https://github.com/rap2hpoutre/laravel-log-viewer
+
+# 5.Laravel GraphQL Playground <br>
+Easily integrate GraphQL Playground into your Laravel projects.
+https://github.com/mll-lab/laravel-graphql-playground
+
+# 6.Laravel passport <br>
+Laravel already makes it easy to perform authentication via traditional login forms, but what about APIs? APIs typically use tokens to authenticate users and do not maintain session state between requests. Laravel makes API authentication a breeze using Laravel Passport, which provides a full OAuth2 server implementation for your Laravel application in a matter of minutes. Passport is built on top of the League OAuth2 server that is maintained by Andy Millington and Simon Hamp.
+https://laravel.com/docs/5.8/passport
+
+# 7.Lighthouse GraphQL Passport Auth (Laravel 5.8 / Lighthouse ^3.2) <br>
+GraphQL passport based Authentication and Authorization
+https://github.com/joselfonseca/lighthouse-graphql-passport-auth
+
+
+
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 <p align="center">
@@ -77,6 +111,3 @@ extend type Query @group(middleware: ["auth:admin"]){
   adminInfo: Secrets
   nukeCodes: [NukeCode!]!
 }
-# Post @can(if: "create", model: "App\\Post")
-# users:[User!]! @paginate(type: "paginator" model: "App\\User") @middleware(checks: ["auth:api", "custom"])
-#@can(if: "view", model: "App\\User")
